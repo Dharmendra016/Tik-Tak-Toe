@@ -3,6 +3,9 @@
 #include<vector>
 #include<cstdlib> 
 #include<time.h>
+#include<Windows.h>
+#include <unistd.h>
+
 using namespace std; 
 
 
@@ -158,13 +161,13 @@ bool colcheckO(vector<string>& board){
 
 //for single player 
 void randMove(vector<string>& board){
+    sleep(0.5);
     srand(time(0));
-    // cout<<randNum<<endl;
 
     for(int i = 0 ; i<9 ;i++){
         int randNum = rand() % 9;
 
-        if( board[randNum/3][randNum%3] != 'X' ||  board[randNum/3][randNum%3] != 'O'){
+        if( board[randNum/3][randNum%3] != 'X' && board[randNum/3][randNum%3] != 'O'){
              board[randNum/3][randNum%3] = 'O';
              break;
         }
@@ -173,82 +176,62 @@ void randMove(vector<string>& board){
 
 }
 
+void twoPlayer(int player_1 , int player_2 , vector<string> &board){
 
-int main(){
-    int n = 3; 
-    vector<string> board(n);
+     int c = 0;
 
-    //making board 
-    for(int i= 0; i<board.size() ; i++){
-        for(int j = 0 ; j<board.size() ; j++){
-            board[i][j] = '-';
+    // game logics 
+    for(int i = 0 ; i<12 ; i++){
+        cout<<"Player's 1 turn(x): ";
+        cin>>player_1;
+
+        //if  player-1 has select the same place as palyer-2 
+        while( board[(player_1-1)/3][(player_1-1)%3] == 'X' || board[(player_1-1)/3][(player_1-1)%3] == 'O'){
+            cout<<"Already filled . Please again choose another place:";
+            cin>>player_1;
+        }
+
+        board[(player_1-1)/3][(player_1-1)%3] = 'X';
+        c++;
+        display(board);
+        if( diacheckX(board) || horicheckX(board) || colcheckX(board)){
+            cout<<endl;
+            cout<<"player-1 wins "<<endl;
+            break;
+        }
+        if( c == 9 ){
+            cout<<"Draw !!";
+            break;
+        }
+        cout<<endl;
+        cout<<"Player's 2 turn(o): ";
+        cin>>player_2;
+
+        //if  player-2 has select the same place as palyer-1 
+        while( board[(player_2-1)/3][(player_2-1)%3] == 'X' || board[(player_2-1)/3][(player_2-1)%3] == 'O'){
+            cout<<"Already filled . Please again choose another place:";
+            cin>>player_2;
+        }
+
+
+        board[(player_2-1)/3][(player_2-1)%3] = 'O';
+        c++;
+        display(board);
+         if( diacheckO(board) || horicheckO(board) || colcheckO(board)){
+            cout<<endl;
+            cout<<"player-2 wins :"<<endl;
+            break;
+        }
+        if( c == 9 ){
+            cout<<"Draw !!";
+            break;
         }
     }
 
-    display(board);
-    cout<<endl;
+}
 
-
-    //players 
-    int player_1 ; 
-    int player_2 ;
-
-    // int c = 0;
-
-    //game logics 
-    // for(int i = 0 ; i<12 ; i++){
-    //     cout<<"Player's 1 turn(x): ";
-    //     cin>>player_1;
-
-    //     //if  player-1 has select the same place as palyer-2 
-    //     while( board[(player_1-1)/3][(player_1-1)%3] == 'X' || board[(player_1-1)/3][(player_1-1)%3] == 'O'){
-    //         cout<<"Already filled . Please again choose another place:";
-    //         cin>>player_1;
-    //     }
-
-    //     board[(player_1-1)/3][(player_1-1)%3] = 'X';
-    //     c++;
-    //     display(board);
-    //     if( diacheckX(board) || horicheckX(board) || colcheckX(board)){
-    //         cout<<endl;
-    //         cout<<"player-1 wins "<<endl;
-    //         break;
-    //     }
-    //     if( c == 9 ){
-    //         cout<<"Draw !!";
-    //         break;
-    //     }
-    //     cout<<endl;
-    //     cout<<"Player's 2 turn(o): ";
-    //     cin>>player_2;
-
-    //     //if  player-2 has select the same place as palyer-1 
-    //     while( board[(player_2-1)/3][(player_2-1)%3] == 'X' || board[(player_2-1)/3][(player_2-1)%3] == 'O'){
-    //         cout<<"Already filled . Please again choose another place:";
-    //         cin>>player_2;
-    //     }
-
-
-    //     board[(player_2-1)/3][(player_2-1)%3] = 'O';
-    //     c++;
-    //     display(board);
-    //      if( diacheckO(board) || horicheckO(board) || colcheckO(board)){
-    //         cout<<endl;
-    //         cout<<"player-2 wins :"<<endl;
-    //         break;
-    //     }
-    //     if( c == 9 ){
-    //         cout<<"Draw !!";
-    //         break;
-    //     }
-    // }
-
-
-    // display(board);
-
-
-
-    int c = 0 ; 
+void singlePlayer(int player_1 , int player_2 , vector<string>&board){
+      int c = 0 ; 
     //single player mode --> inplement is on 
     for(int i = 0 ; i<9 ; i++){
 
@@ -279,6 +262,10 @@ int main(){
         cout<<"Computer's Turn:"<<endl;;
         randMove(board);
 
+        // while( board[(player_2-1)/3][(player_2-1)%3] == 'X' || board[(player_2-1)/3][(player_2-1)%3] == 'O'){
+        //     cout<<"Already filled . Please again choose another place:";
+        //     cin>>player_2;
+        // }
         c++;
         display(board);
          if( diacheckO(board) || horicheckO(board) || colcheckO(board)){
@@ -292,7 +279,37 @@ int main(){
         }
 
     }
-    // display(board);
+}
+
+
+int main(){
+    int n = 3; 
+    vector<string> board(n);
+
+    //making board 
+    for(int i= 0; i<board.size() ; i++){
+        for(int j = 0 ; j<board.size() ; j++){
+            board[i][j] = '-';
+        }
+    }
+
+    //players 
+    int player_1 ; 
+    int player_2 ;
+
+    
+    cout<<"Please which mode your want to play:"<<endl<<"1.single player mode"<<endl<<"2.Two Player mode"<<endl;
+    int chooseMode; 
+    cin>>chooseMode; 
+
+    display(board);
+    cout<<endl;
+    if( chooseMode == 1){
+        singlePlayer(player_1 , player_2 , board);
+    }else if( chooseMode == 2){
+        twoPlayer(player_1 , player_2 , board);
+    }
+
 
     return 0;
 }
