@@ -3,6 +3,8 @@
 #include<vector> 
 using namespace std; 
 
+
+//Board for display
 void display(vector<string>& board){
 
     for(int i= 0; i<board.size() ; i++){
@@ -13,7 +15,7 @@ void display(vector<string>& board){
     }
 
 }
-
+//checking both diagonal for X
 bool diacheckX(vector<string>& board){
     int count = 0;
     for(int i = 0; i<9 ; i++){
@@ -49,7 +51,8 @@ bool diacheckX(vector<string>& board){
     }
 
 }
-//checking Both Diagonal 
+
+//checking Diagonals for O 
 bool diacheckO(vector<string>& board){
     int count = 0;
     for(int i = 0; i<9 ; i++){
@@ -86,7 +89,7 @@ bool diacheckO(vector<string>& board){
 
 }
 
-//checking horizontal 
+//checking horizontal for x
 bool horicheckX(vector<string>& board){
     int cnt = 0 ; 
     for(int i= 0; i<3 ; i++){
@@ -102,7 +105,7 @@ bool horicheckX(vector<string>& board){
     }
     return false;
 }
-
+//checking horizontal for O
 bool horicheckO(vector<string>& board){
     int cnt = 0 ; 
     for(int i= 0; i<3 ; i++){
@@ -118,7 +121,7 @@ bool horicheckO(vector<string>& board){
     }
     return false;
 }
-//vertical col check 
+//vertical col check  forx
 bool colcheckX(vector<string>& board){
     int cnt = 0 ; 
     for(int i= 0; i<3 ; i++){
@@ -134,7 +137,7 @@ bool colcheckX(vector<string>& board){
     }
     return false;
 }
-
+//checking coloum for o
 bool colcheckO(vector<string>& board){
     int cnt = 0 ; 
     for(int i= 0; i<3 ; i++){
@@ -162,15 +165,24 @@ int main(){
         }
     }
 
+    display(board);
+    cout<<endl;
+
 
     //players 
     int player_1 ; 
     int player_2 ;
 
     int c = 0;
-    for(int i = 0 ; i<9 ; i++){
+    for(int i = 0 ; i<12 ; i++){
         cout<<"Player's 1 turn(x): ";
         cin>>player_1;
+
+        //if  player-1 has select the same place as palyer-2 
+        while( board[(player_1-1)/3][(player_1-1)%3] == 'X' || board[(player_1-1)/3][(player_1-1)%3] == 'O'){
+            cout<<"Already filled . Please again choose another place:";
+            cin>>player_2;
+        }
 
         board[(player_1-1)/3][(player_1-1)%3] = 'X';
         c++;
@@ -187,6 +199,13 @@ int main(){
         cout<<endl;
         cout<<"Player's 2 turn(o): ";
         cin>>player_2;
+
+        //if  player-2 has select the same place as palyer-1 
+        while( board[(player_2-1)/3][(player_2-1)%3] == 'X' || board[(player_2-1)/3][(player_2-1)%3] == 'O'){
+            cout<<"Already filled . Please again choose another place:";
+            cin>>player_2;
+        }
+
 
         board[(player_2-1)/3][(player_2-1)%3] = 'O';
         c++;
